@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path'); // ✨ React dosyalarını gösterebilmek için gerekli
 
 const Finance = require('./models/Finance');
 const SliderNews = require('./models/SliderNews');
@@ -8,13 +9,13 @@ const NewsContent = require('./models/NewsContent');
 const Weather = require('./models/Weather');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
+// MongoDB bağlantısı
 const mongoURI = "mongodb+srv://denzgg0:aa6jZ2I6qRvug4C1@cluster0.h3vunhn.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0";
-
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -22,6 +23,7 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('MongoDB bağlantısı başarılı'))
 .catch(err => console.error('MongoDB bağlantı hatası:', err));
 
+// --- API ROTALARI ---
 app.get('/api/finance', async (req, res) => {
   try {
     const financeData = await Finance.find();
@@ -71,6 +73,14 @@ app.get('/api/news', async (req, res) => {
   }
 });
 
+// --- REACT FRONTEND SERVE ---
+app.use(express.static(path.join(__dirname, '../news-portal/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../news-portal/build', 'index.html'));
+});
+
+// --- SUNUCUYU BAŞLAT ---
 app.listen(port, () => {
   console.log(`Backend server ${port} portunda çalışıyor`);
 });
