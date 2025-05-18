@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB bağlantısı
-const mongoURI = "mongodb+srv://denzgg0:aa6jZ2I6qRvug4C1@cluster0.h3vunhn.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = env
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
